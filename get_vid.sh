@@ -3,7 +3,7 @@
 # Youtube ID
 # wav file
 # english srt file
-
+cd songs
 mkdir $1
 cd $1
 python ./get_song_info.py $1 $2 $3 $GOOGLE_API_KEY #song.json
