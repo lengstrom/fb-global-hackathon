@@ -1,0 +1,22 @@
+# api key AIzaSyAGeIOfwnL2svtJvwCZLZ155nV6cNJ7LjI
+# ex get captions for Roar: GET https://www.googleapis.com/youtube/v3/captions/?part=snippet&videoId=CevxZvSJLk8&key=AIzaSyAGeIOfwnL2svtJvwCZLZ155nV6cNJ7LjI
+
+# iso 639.2
+en, und -> english
+
+download captions:
+GET http://video.google.com/timedtext?lang=LANG&v=VIDEOID
+
+# translate to SRT using https://gist.github.com/YungSang/2752897
+
+# then get https://github.com/byroot/pysrt
+
+# use https://pypi.python.org/pypi/pysrt
+# use GET https://www.googleapis.com/youtube/v3/captions/id
+
+ex https://www.googleapis.com/youtube/v3/captions/meQZ2HLKHKBTHkIA3f8RiBLW-m8u5D8xwhb5-hlWd_A=?key=AIzaSyAGeIOfwnL2svtJvwCZLZ155nV6cNJ7LjI
+
+#yt->wav
+youtube-dl --extract-audio --audio-format mp3 http://www.youtube.com/watch?v=O-xlvalecI8
+
+
