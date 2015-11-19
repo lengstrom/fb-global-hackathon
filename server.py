@@ -17,7 +17,7 @@ class FingerPrinter(tornado.web.RequestHandler):
         # otherwise send '_
         pdb.set_trace()
         # self.request.body
-        
+
         res = "{}"
         
         self.write(res)

@@ -1,4 +1,5 @@
-import sys, os, json, requests
+import sys, os, json, requests, parse_srt
+from unicodedata import normalize
 SONG_ID=sys.argv[1]
 SONG_TITLE=sys.argv[2]
 SONG_ARTIST=sys.argv[3]
@@ -6,8 +7,13 @@ GOOGLE_API_KEY=sys.argv[4]
 
 def make_srt(lang, vid_id):
     xml = requests.get('http://video.google.com/timedtext?lang=' + lang + '&v=' + vid_id).text
-    
-    
+    try:
+        xml = normalize('NFKD', xml).encode("ASCII", 'ignore')
+    except:
+        print "err parsing! proceeding..."
+    srt_txt = parse_srt.parseBuf(xml)
+    with open('./' + lang + '.srt', 'w') as f:
+        f.write(srt_txt)
 
 URL="https://www.googleapis.com/youtube/v3/captions/?part=snippet&videoId=%s&key=%s" % (SONG_ID, GOOGLE_API_KEY)
 r=requests.get(URL)
