@@ -1,27 +1,12 @@
-import sys, os, json, requests, parse_srt, pdb
+import sys, os, json, requests, xml2json, pdb
 from unicodedata import normalize
-SONG_ID=sys.argv[1]
-SONG_TITLE=sys.argv[2]
-SONG_ARTIST=sys.argv[3]
-GOOGLE_API_KEY=sys.argv[4]
-
-def make_srt(lang, vid_id, und_is_en, GB_is_en):
-    lang_ = lang
-    if lang == 'en' and und_is_en:
-        lang_ = 'und'
-
-    if lang == 'en' and GB_is_en:
-        lang_ = 'en-GB'
-
-
-    xml = requests.get('http://video.google.com/timedtext?lang=' + lang_ + '&v=' + vid_id).text
-    try:
-        xml = normalize('NFKD', xml).encode("ASCII", 'ignore')
-    except:
-        print "err parsing! proceeding..."
-    srt_txt = parse_srt.parseBuf(xml)
-    with open('./' + lang + '.srt', 'w') as f:
-        f.write(srt_txt)
+if len(sys.argv) == 2:
+    for i in range(3):
+        sys.argv.insert('1')
+SONG_ID=sys.argv[2]
+SONG_TITLE=sys.argv[3]
+SONG_ARTIST=sys.argv[4]
+GOOGLE_API_KEY=sys.argv[1]
 
 URL="https://www.googleapis.com/youtube/v3/captions/?part=snippet&videoId=%s&key=%s" % (SONG_ID, GOOGLE_API_KEY)
 r=requests.get(URL)
@@ -41,7 +26,7 @@ for i in items:
 und_is_en = False
 GB_is_en = False
 
-json_to_write['languages'] = filter(lambda x: x in ['en', 'und', 'it', 'es', 'fr', "en-GB", 'es-MX', 'en-US', 'pt-BR'], json_to_write['languages'])
+json_to_write['languages'] = filter(lambda x: x in ['en', 'und', 'it', 'es', 'fr', "en-GB", 'es-MX', 'en-US', 'pt-BR', 'ja'], json_to_write['languages'])
 
 if 'und' in json_to_write['languages'] and 'en' in json_to_write['languages']:
     del json_to_write['languages'][json_to_write['languages'].index('und')]
@@ -57,9 +42,11 @@ elif 'en-GB' in json_to_write['languages'] and not 'en' in json_to_write['langua
     del json_to_write['languages'][json_to_write['languages'].index('en-GB')]
     GB_is_en = True
 
-    
 for i in json_to_write['languages']:
-    make_srt(i, SONG_ID, und_is_en, GB_is_en)
+    print '______________________'
+    print i, SONG_ID
+    xml2json.make_json_from_xml(i, SONG_ID, und_is_en, GB_is_en)
+    print "----------------------"
 
 with open('song.json', 'w') as f:
     f.write(json.dumps(json_to_write))
