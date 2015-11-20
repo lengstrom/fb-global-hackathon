@@ -25,6 +25,7 @@ def make_djv():
     return Dejavu(config)
 
 def get_lines_to_display(text, offset_time):
+    offset_time += 6
     jso = json.loads(text)
     last = 0
     for i, v in enumerate(jso):
