@@ -72,9 +72,10 @@ class FingerPrinter(tornado.web.RequestHandler):
         recording_path = './tmp/' + str(random.randint(1, 9999)) + '.wav'
         with open(recording_path, 'wb') as f:
             f.write(recording)
+        song = djv.recognize(FileRecognizer, recording_path)
+        pdb.set_trace()
         time_stamp, lang = file_name.split(',')
         print "    ts, lang: %s, %s" % (time_stamp, lang)
-        song = djv.recognize(FileRecognizer, recording_path)
         if song['confidence'] > 10:
             song_info = get_song_info(song)
             if song_info == None:
