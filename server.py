@@ -85,10 +85,10 @@ class FingerPrinter(tornado.web.RequestHandler):
                 song_info['start_time'] = (time.time() - sec_into_song) * 1000
                 identified_song(song_info, self)
         else:
-            print "    no song bc low confidence, resetting..."
+            print "    no song bc low confidence, resetting... data was: %s" % (song,)
             no_song(self)
         
-        os.remove(recording_path)
+        #os.remove(recording_path)
 
 if __name__ == "__main__":
     app = tornado.web.Application([

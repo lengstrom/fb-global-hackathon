@@ -23,4 +23,4 @@ if 'train' in sys.argv:
     }
 
     djv = Dejavu(config)
-    djv.fingerprint_directory("./fp_wavs", [".wav"], 3)
+    djv.fingerprint_directory("./fp_wavs", [".wav"], 5)
