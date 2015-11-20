@@ -24,6 +24,25 @@ def make_djv():
 
     return Dejavu(config)
 
+def get_lines_to_display(text, offset_time):
+    jso = json.loads(text)
+    last = 0
+    for i, v in enumerate(jso):
+        curr = int(v['ts'])
+        if last < offset_time and curr >= offset_time:
+            selected = i
+            break
+        else:
+            last = curr
+    if selected == 0:
+        lines = jso[:3]
+    elif selected == len(jso) - 1:
+        lines = jso[-3:]
+    else:
+        lines = jso[selected -1 : selected + 2]
+
+    return lines
+
 def get_song_info(song, lang):
     yt_id = song['song_name']
     with open(os.path.join('./songs', yt_id, 'song.json')) as data_file:    
@@ -37,8 +56,8 @@ def get_song_info(song, lang):
             subtitles_txt = f.read()
     else:
         return None
-
-    return {'name':name, 'artist':artist, 'subtitles':subtitles_txt}
+    jso_to_sho = json.dumps(get_lines_to_display(subtitles_txt, song['offset_seconds']))
+    return {'name':name, 'artist':artist, 'subtitles':jso_to_sho}
 
 djv = make_djv()
 
@@ -76,12 +95,13 @@ class FingerPrinter(tornado.web.RequestHandler):
         time_stamp, lang = file_name.split(',')
         print "    ts, lang: %s, %s" % (time_stamp, lang)
         if song['confidence'] > 10:
+            print "    offset: " + str(song['offset_seconds'])
             song_info = get_song_info(song, lang)
             if song_info == None:
                 print "    no song bc no lyrics for song for this lang"
                 no_song(self)
             else:
-                sec_into_song = (song['offset_seconds'] + 8)
+                sec_into_song = (song['offset_seconds'] + 10)
                 song_info['start_time'] = -sec_into_song * 1000 + int(time_stamp)
                 identified_song(song_info, self)
         else:
