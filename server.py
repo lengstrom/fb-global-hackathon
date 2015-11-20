@@ -11,6 +11,8 @@ from dejavu.recognize import FileRecognizer
 from firebase import Firebase
 f = Firebase('https://fbglobalhacks.firebaseio.com/')
 
+
+
 def make_djv():
     config = {
         "database": {
@@ -73,17 +75,16 @@ class FingerPrinter(tornado.web.RequestHandler):
         with open(recording_path, 'wb') as f:
             f.write(recording)
         song = djv.recognize(FileRecognizer, recording_path)
-        pdb.set_trace()
         time_stamp, lang = file_name.split(',')
         print "    ts, lang: %s, %s" % (time_stamp, lang)
         if song['confidence'] > 10:
-            song_info = get_song_info(song)
+            song_info = get_song_info(song, lang)
             if song_info == None:
                 print "    no song bc no lyrics for song for this lang"
                 no_song(self)
             else:
                 sec_into_song = (song['offset_seconds'] + 8)
-                song_info['start_time'] = (time.time() - sec_into_song) * 1000
+                song_info['start_time'] = -sec_into_song * 1000 + time_stamp
                 identified_song(song_info, self)
         else:
             print "    no song bc low confidence, resetting... data was: %s" % (song,)
