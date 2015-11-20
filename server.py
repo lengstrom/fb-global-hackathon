@@ -29,7 +29,7 @@ def get_lines_to_display(text, offset_time):
     jso = json.loads(text)
     last = 0
     for i, v in enumerate(jso):
-        curr = int(v['ts'])
+        curr = float(v['ts'])
         if last < offset_time and curr >= offset_time:
             selected = i
             break
