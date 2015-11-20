@@ -13,8 +13,6 @@ class FingerPrinter(tornado.web.RequestHandler):
         self.render("index.html")
 
     def post(self):
-        # if there's a face (or was in the last two seconds): send the coordinates of the image (x, y, h, w)
-        # otherwise send '_
         pdb.set_trace()
         # self.request.body
 
@@ -23,7 +21,7 @@ class FingerPrinter(tornado.web.RequestHandler):
         self.write(res)
 
 if __name__ == "__main__":
-    app = tornado.web.Application([
+    app = tornado.web.Appl..ication([
         (r"/", ImageHandler, dict())
     ])
     server = tornado.httpserver.HTTPServer(app)
