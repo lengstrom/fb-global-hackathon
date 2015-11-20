@@ -11,8 +11,6 @@ from dejavu.recognize import FileRecognizer
 from firebase import Firebase
 f = Firebase('https://fbglobalhacks.firebaseio.com/')
 
-
-
 def make_djv():
     config = {
         "database": {
@@ -33,7 +31,7 @@ def get_song_info(song, lang):
     name = data['title']
     artist = data['artist']
     
-    subtitles = filter(lambda x: 'json' in x and lang in x, os.path.listdir(os.path.join('./songs', yt_id)))
+    subtitles = filter(lambda x: 'json' in x and lang in x, os.listdir(os.path.join('./songs', yt_id)))
     if len(subtitles) == 1:
         with open(os.path.join('./songs/', yt_id, subtitles[0]), 'r') as f:
             subtitles_txt = f.read()
@@ -55,8 +53,8 @@ def no_song(res):
     res.write('0')
 
 def identified_song(info, res):
-    print "    identified clip as %s seconds into %s, by %s" % (info['offset_seconds'], info['name'], info['artist'])
-    send_to_firebase(info['subtitles'],info['name'],info['artist'],info['offset_seconds'])
+    print "    identified clip as %s seconds into %s, by %s" % (info['start_time'], info['name'], info['artist'])
+    send_to_firebase(info['subtitles'],info['name'],info['artist'],info['start_time'])
     res.write('1')
     
 class FingerPrinter(tornado.web.RequestHandler):
@@ -84,7 +82,7 @@ class FingerPrinter(tornado.web.RequestHandler):
                 no_song(self)
             else:
                 sec_into_song = (song['offset_seconds'] + 8)
-                song_info['start_time'] = -sec_into_song * 1000 + time_stamp
+                song_info['start_time'] = -sec_into_song * 1000 + int(time_stamp)
                 identified_song(song_info, self)
         else:
             print "    no song bc low confidence, resetting... data was: %s" % (song,)

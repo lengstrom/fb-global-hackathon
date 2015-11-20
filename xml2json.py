@@ -22,5 +22,5 @@ def make_json_from_xml(lang, vid_id, und_is_en, GB_is_en):
 def FUCKXML(soup):
     out = []
     for child in soup.children:
-        out.append({u'ts':child['start'],u'l':child.text})
+        out.append({u'ts':child['start'],u'l':BeautifulSoup(child.text, 'lxml').text})
     return out

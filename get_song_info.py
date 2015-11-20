@@ -26,7 +26,7 @@ for i in items:
 und_is_en = False
 GB_is_en = False
 
-json_to_write['languages'] = filter(lambda x: x in ['en', 'und', 'it', 'es', 'fr', "en-GB", 'es-MX', 'en-US', 'pt-BR', 'ja'], json_to_write['languages'])
+json_to_write['languages'] = filter(lambda x: x in ['en', 'und', 'vi', 'es', 'fr', "en-GB", 'es-MX', 'en-US', 'pt-BR', 'ja'], json_to_write['languages'])
 
 if 'und' in json_to_write['languages'] and 'en' in json_to_write['languages']:
     del json_to_write['languages'][json_to_write['languages'].index('und')]
@@ -48,5 +48,5 @@ for i in json_to_write['languages']:
     xml2json.make_json_from_xml(i, SONG_ID, und_is_en, GB_is_en)
     print "----------------------"
 
-with open('song.json', 'w') as f:
-    f.write(json.dumps(json_to_write))
+#with open('song.json', 'w') as f:
+#    f.write(json.dumps(json_to_write))
